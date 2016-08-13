@@ -36,9 +36,10 @@ class testDBConnector(unittest.TestCase):
         new_entry = c.execute("""select title, content from entries""").fetchall()
         c.close()
 
-        self.assertEqual(2, len(new_entry))
-        self.assertEqual(new_title, new_entry[1])
-        self.assertEqual(new_content, new_entry[2])
+        self.assertEqual(1, len(new_entry))
+        self.assertEqual(2, len(new_entry[0]))
+        self.assertEqual(new_title, new_entry[0][0])
+        self.assertEqual(new_content, new_entry[0][1])
 
     @classmethod
     def tearDownClass(cls):
