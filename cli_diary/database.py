@@ -17,6 +17,12 @@ class DBConnector():
         insert_result=self.cursor.execute(sql_query)
         self.conn.commit()
 
+    def getAllEntries(self):
+        """Will fetch everything in the entries table in the database and return a list of them."""
+        sql_query = "SELECT * FROM {}".format(self.table)
+        get_result = self.cursor.execute(sql_query).fetchall()
+        return get_result
+
     def close(self):
         """End the connection to the sqlite table."""
         self.cursor.close()
