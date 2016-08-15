@@ -10,6 +10,7 @@ class DBConnector():
         self.cursor = self.conn.cursor()
         self.cursor.execute("PRAGMA key=\'{}\'".format(database_password))
         self.table = "entries"
+        # TODO check for bad password
 
     def insert(self, title, content):
         """Given the title and content for a new diary/journal entry, it will be inserted into the database's entries table."""

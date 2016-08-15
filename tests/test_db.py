@@ -1,10 +1,8 @@
+import os
 import sys
-sys.path.append("/home/harris/Documents/cli_diary")
+sys.path.append(os.path.realpath(".."))
 import unittest
 from pysqlcipher import dbapi2 as sqlite
-conn = sqlite.connect('test.db')
-c = conn.cursor()
-c.execute("PRAGMA key='test'")
 
 from cli_diary.database import DBConnector
 
