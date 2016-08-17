@@ -10,6 +10,11 @@ class DBConnector():
         self.cursor = self.conn.cursor()
         self.cursor.execute("PRAGMA key=\'{}\'".format(database_password))
         self.table = "entries"
+        self.cursor.execute(
+        """CREATE TABLE IF NOT EXISTS entries (id integer primary key
+        autoincrement, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, title
+        CHAR(50), content CHAR(2000))"""
+        )
         # TODO check for bad password
 
     def insert(self, title, content):
