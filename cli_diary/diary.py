@@ -7,7 +7,7 @@ class CLIUI:
         self.db = "diary.db"
         self.dbconn = DBConnector(self.db, password)
 
-    def getUserInput(self):
+    def promptForEntry(self):
         """Obtain user's input for the diary entry from the terminal."""
         print "Start typing an entry."
         print "----------------------"
@@ -18,13 +18,45 @@ class CLIUI:
         title = sys.stdin.readlines()[0]
         return title, content
 
+    def promptForInput(self, inputMessage):
+        """Prompts the user for input."""
+        selection = raw_input(inputMessage)
+        return selection
+
     def createEntry(self):
         """Get the user's diary entry and put it into the database."""
-        title, content = self.getUserInput()
+        title, content = self.promptForEntry()
         self.dbconn.insert(title, content)
         print "\n"
         print "Diary entry saved successfully!"
         return
+
+    def selectEntry(self):
+        """Allow the user to select an entry and return the corresponding entry from SQL table"""
+        entries = self.dbconn.getAllEntries()
+        titles = map(lambda entry: entry[3], entries)
+        for i in range(len(titles)):
+            titles[i]=str(i)+"."+titles[i]
+        for title in titles:
+            print title
+        result = None
+        while result == None:
+            print "Select an entry, or type q to quit."
+            selection = self.promptForInput("> ")
+            try:
+                selection = int(selection)
+                if selection in range(len(titles)):
+                    result = entries[selection]
+                else:
+                    result = None
+                    print "Try again!"
+            except:
+                if selection == "q":
+                    result = []
+                else:
+                    result = None
+                    print "Try again!"
+        return result
 
     def mainLoop(self):
         print "Welcome to your diary! Write down your secret thoughts, they will be safe here!"
@@ -48,8 +80,14 @@ class CLIUI:
             if choice == 1:
                 self.createEntry()
             elif choice == 2:
-                # TODO: Code for viewing all entries
-                pass
+                entry = self.selectEntry()
+                if entry == []:
+                    continue
+                else:
+                    # Print title and content
+                    print entry[2]
+                    print entry[3]
+                    self.promptForInput("Press RETURN when finished.")
             elif choice == 3:
                 # TODO: Code for deleting an entry
                 pass
