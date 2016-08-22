@@ -3,8 +3,8 @@ import sys
 
 class CLIUI:
 
-    def __init__(self, password):
-        self.db = "diary.db"
+    def __init__(self, db, password):
+        self.db = db
         self.dbconn = DBConnector(self.db, password)
 
     def promptForEntry(self):
@@ -20,8 +20,8 @@ class CLIUI:
 
     def promptForInput(self, inputMessage):
         """Prompts the user for input."""
-        selection = raw_input(inputMessage)
-        return selection
+        user_input = raw_input(inputMessage)
+        return user_input
 
     def createEntry(self):
         """Get the user's diary entry and put it into the database."""
@@ -36,9 +36,7 @@ class CLIUI:
         entries = self.dbconn.getAllEntries()
         titles = map(lambda entry: entry[3], entries)
         for i in range(len(titles)):
-            titles[i]=str(i)+"."+titles[i]
-        for title in titles:
-            print title
+            print str(i) + "." + titles[i]
         result = None
         while result == None:
             print "Select an entry, or type q to quit."
@@ -72,7 +70,7 @@ class CLIUI:
             4) Quit
             """
             try:
-                choice = int(raw_input("Selection: "))
+                choice = int(self.promptForInput("Selection: "))
             except:
                 print "Bad selection! Try something else!"
                 continue
@@ -99,6 +97,7 @@ class CLIUI:
         return
 
 if __name__ == "__main__":
+    database="diary.db"
     password = "password123"
-    ui = CLIUI(password)
+    ui = CLIUI(database,password)
     ui.mainLoop()
