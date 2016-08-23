@@ -65,7 +65,7 @@ class CLIUI:
             What would you like to do?
 
             1) Create a new entry
-            2) View all entries
+            2) View an entry
             3) Delete an entry
             4) Quit
             """
@@ -74,7 +74,6 @@ class CLIUI:
             except:
                 print "Bad selection! Try something else!"
                 continue
-
             if choice == 1:
                 self.createEntry()
             elif choice == 2:

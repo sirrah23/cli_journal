@@ -29,6 +29,9 @@ class DBConnector():
         get_result = self.cursor.execute(sql_query).fetchall()
         return get_result
 
+    def deleteEntryByID(self, entry_id):
+        pass
+
     def close(self):
         """End the connection to the sqlite table."""
         self.cursor.close()
