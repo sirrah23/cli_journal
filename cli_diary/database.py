@@ -30,7 +30,9 @@ class DBConnector():
         return get_result
 
     def deleteEntryByID(self, entry_id):
-        pass
+        sql_query = "DELETE FROM {} WHERE ID = {}".format(self.table, entry_id)
+        delete_result=self.cursor.execute(sql_query)
+        self.conn.commit()
 
     def close(self):
         """End the connection to the sqlite table."""
