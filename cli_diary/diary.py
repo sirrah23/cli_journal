@@ -1,5 +1,6 @@
 from database import DBConnector
 import sys
+import getpass
 
 class CLIUI:
 
@@ -61,6 +62,10 @@ class CLIUI:
         self.dbconn.deleteEntryByID(id_to_delete)
         return
 
+    def passwordIsCorrect(self):
+        """Returns True if the password is correct, otherwise False."""
+        return self.dbconn.isThePasswordCorrect()
+
     def mainLoop(self):
         print "Welcome to your diary! Write down your secret thoughts, they will be safe here!"
 
@@ -107,6 +112,10 @@ class CLIUI:
 
 if __name__ == "__main__":
     database="diary.db"
-    password = "password123"
+    print "Password?"
+    password = getpass.getpass("> ")
     ui = CLIUI(database,password)
-    ui.mainLoop()
+    if not ui.passwordIsCorrect():
+        print "Go away."
+    else:
+        ui.mainLoop()
