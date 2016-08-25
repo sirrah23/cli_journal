@@ -47,6 +47,20 @@ class testDiary(unittest.TestCase):
             self.assertEqual('Bye', result[3])
             return
 
+    def testDeleteEntry(self):
+        # Insert an entry
+        utils.insertEntry(db,password,'Hi','Bye')
+        # Get the id of the inserted entry
+        entries = utils.getEntries(db, password)
+        inserted_id = entries[0][0]
+        # Perform deletion
+        ui = CLIUI(db, password)
+        ui.deleteEntry(inserted_id)
+        # Check to see that it worked
+        entries = utils.getEntries(db, password)
+        self.assertEqual(0, len(entries))
+        return
+
     @classmethod
     def tearDownClass(cls):
         pass

@@ -49,12 +49,17 @@ class CLIUI:
                     result = None
                     print "Try again!"
             except:
-                if selection == "q":
+                if selection == "q" or selection == '':
                     result = []
                 else:
                     result = None
                     print "Try again!"
         return result
+
+    def deleteEntry(self, id_to_delete):
+        """Given the id for a diary entry, the diary entry will be deleted."""
+        self.dbconn.deleteEntryByID(id_to_delete)
+        return
 
     def mainLoop(self):
         print "Welcome to your diary! Write down your secret thoughts, they will be safe here!"
@@ -86,8 +91,13 @@ class CLIUI:
                     print entry[3]
                     self.promptForInput("Press RETURN when finished.")
             elif choice == 3:
-                # TODO: Code for deleting an entry
-                pass
+                entry = self.selectEntry()
+                if entry == []:
+                    continue
+                else:
+                    id_to_delete=entry[0]
+                    self.deleteEntry(id_to_delete)
+                    self.promptForInput("Entry has been deleted. Press RETURN.")
             elif choice == 4:
                 pass
             else:
