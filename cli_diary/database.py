@@ -36,11 +36,14 @@ class DBConnector():
         return get_result
 
     def deleteEntryByID(self, entry_id):
+        """Delete an entry via it's id in the database."""
         sql_query = "DELETE FROM {} WHERE ID = {}".format(self.table, entry_id)
         delete_result=self.cursor.execute(sql_query)
         self.conn.commit()
 
     def isThePasswordCorrect(self):
+        """Returns a boolean indicating whether or not the password used to try and connect
+        to the database was correct or not."""
         return self.connected
 
     def close(self):
