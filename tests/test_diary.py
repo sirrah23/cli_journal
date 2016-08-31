@@ -29,6 +29,13 @@ class testDiary(unittest.TestCase):
         self.assertEqual("hello", entries[0][3])
         return
 
+    def testCreateEntryNone(self):
+        with mock.patch.object(CLIUI, 'promptForEntry', return_value=("","")) as mock_method:
+            ui = CLIUI(db, password)
+            ui.createEntry()
+        entries = utils.getEntries(db, password)
+        self.assertEqual(0,len(entries))
+
     def testSelectEntryNone(self):
         with mock.patch.object(CLIUI, 'promptForInput', return_value="q") as mock_method:
             ui = CLIUI(db, password)

@@ -1,6 +1,8 @@
 from database import DBConnector
 import sys
 import getpass
+import sys, tempfile, os
+from subprocess import call
 
 class CLIUI:
 
@@ -9,14 +11,28 @@ class CLIUI:
         self.dbconn = DBConnector(self.db, password)
 
     def promptForEntry(self):
-        """Obtain user's input for the diary entry from the terminal."""
-        print "Start typing an entry."
-        print "----------------------"
-        content = sys.stdin.readlines()[0]
-        print "\n"
-        print "Title?"
-        print "------"
-        title = sys.stdin.readlines()[0]
+        """Obtain user's input for the diary entry from the terminal via their favorite text editor."""
+        EDITOR = os.environ.get('EDITOR','vim') # Grab the user's favorite editor, vim by default...
+        initial_message = "Write your entry here! The first line will be your title!" # input setup
+
+        # Input file where user will type their entry
+        with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
+            tf.write(initial_message)
+            tf.flush()
+            call([EDITOR, tf.name])
+
+            # Get the entry!
+            tf.seek(0)
+            edited_message = tf.readlines()
+
+            # Get rid of initial template message if it was not erased
+            if edited_message[0] == initial_message + '\n':
+                edited_message.pop(0)
+            title = content = ""
+            # Split entry into title and content if user supplied an entry
+            if len(edited_message) >= 2:
+                title = edited_message.pop(0)     # Title is the first line
+                content = ''.join(edited_message) # remaining lines are diary content
         return title, content
 
     def promptForInput(self, inputMessage):
@@ -27,15 +43,20 @@ class CLIUI:
     def createEntry(self):
         """Get the user's diary entry and put it into the database."""
         title, content = self.promptForEntry()
-        self.dbconn.insert(title, content)
-        print "\n"
-        print "Diary entry saved successfully!"
+        # If no input supplied then don't save anything to database
+        if len(title) == 0 or len(content) == 0:
+            print "\n"
+            print "Nothing was saved!"
+        else:
+            self.dbconn.insert(title, content)
+            print "\n"
+            print "Diary entry saved successfully!"
         return
 
     def selectEntry(self):
         """Allow the user to select an entry and return the corresponding entry from SQL table"""
         entries = self.dbconn.getAllEntries()
-        titles = map(lambda entry: entry[3], entries)
+        titles = map(lambda entry: entry[2], entries)
         for i in range(len(titles)):
             print str(i) + "." + titles[i]
         result = None
