@@ -25,8 +25,9 @@ class DBConnector():
 
     def insert(self, title, content):
         """Given the title and content for a new diary/journal entry, it will be inserted into the database's entries table."""
-        sql_query="INSERT INTO {} (title, content) VALUES (\'{}\',\'{}\')".format(self.table,title, content)
-        insert_result=self.cursor.execute(sql_query)
+        sql_query="INSERT INTO {} (title, content) VALUES (?,?)".format(self.table)
+        #.format(self.table,title, content)
+        insert_result=self.cursor.execute(sql_query,(title, content))
         self.conn.commit()
 
     def getAllEntries(self):
@@ -37,8 +38,9 @@ class DBConnector():
 
     def deleteEntryByID(self, entry_id):
         """Delete an entry via it's id in the database."""
-        sql_query = "DELETE FROM {} WHERE ID = {}".format(self.table, entry_id)
-        delete_result=self.cursor.execute(sql_query)
+        sql_query = "DELETE FROM {} WHERE ID=?".format(self.table)
+        entry_id = str(entry_id)
+        delete_result=self.cursor.execute(sql_query,(entry_id,))
         self.conn.commit()
 
     def isThePasswordCorrect(self):

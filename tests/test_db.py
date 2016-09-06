@@ -39,6 +39,21 @@ class testDBConnector(unittest.TestCase):
         self.assertEqual(new_title, new_entry[0][2])
         self.assertEqual(new_content, new_entry[0][3])
 
+    def testAddAnEntryComma(self):
+        # Insert an entry into the database that has commas in it! 
+        new_title = "New Title for Entry"
+        new_content = "New content for entry. Let's see if commas work!."
+        self.dbconn.insert(title=new_title, content=new_content)
+
+        # Get all the entries in the database
+        new_entry = utils.getEntries(db, password)
+
+        # Assert that our insertion is reflected in the database
+        self.assertEqual(1, len(new_entry))
+        self.assertEqual(4, len(new_entry[0]))
+        self.assertEqual(new_title, new_entry[0][2])
+        self.assertEqual(new_content, new_entry[0][3])
+
     def testViewAllEntries(self):
         # Database should be empty to start with
         entries = self.dbconn.getAllEntries()
